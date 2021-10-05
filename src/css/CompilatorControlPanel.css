@@ -1,0 +1,20 @@
+.compilator-control-panel {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.compilator-control-panel-buttons {
+    background-color: #e1e3e6;
+    border-bottom: 2px solid #abab98;
+}
+
+.compilator-control-panel-button {
+    margin: 5px;
+}
+
+.compilator-control-panel-info {
+    flex-grow: 1;
+    background-color: #e1e3e6;
+}

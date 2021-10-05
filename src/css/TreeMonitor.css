@@ -1,0 +1,29 @@
+.tree-monitor {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    user-select: none;
+}
+
+.tree-canvas {
+    background-color: white;
+}
+
+.scale-control {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    user-select: none;
+}
+
+.scale-control-button {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+}
+
+.scale-control-label {
+    width: 1.4rem;
+    padding: 0 0.5rem;
+}
