@@ -4,6 +4,8 @@ import { useResizeDetector } from 'react-resize-detector';
 
 import "ace-builds/src-noconflict/mode-text";
 import "ace-builds/src-noconflict/theme-textmate";
+import { useDispatch } from 'react-redux';
+import { setCode } from '../../state/action-creators/codeActionCreators';
 
 type EditorSize = {
     width: number,
@@ -12,6 +14,13 @@ type EditorSize = {
 
 const Editor = () => {
     const [ editorSize, setEditorSize ] = React.useState<EditorSize>({width: 0, height: 0})
+
+    const dispatch = useDispatch()
+
+    const updateCode = (code: string) => {
+        dispatch(setCode(code))
+    }
+
     const editorWrapper = useResizeDetector<HTMLDivElement>({
         onResize: () => {
             setEditorSize({
@@ -34,9 +43,9 @@ const Editor = () => {
             <AceEditor
                 mode="text"
                 theme="textmate"
-                onChange={() => { }}
+                onChange={(value) => { updateCode(value) }}
                 name="editor"
-                fontSize="14px"
+                fontSize="20px"
                 width={`${editorSize.width}px`}
                 height={`${editorSize.height}px`}
                 editorProps={{ $blockScrolling: true }

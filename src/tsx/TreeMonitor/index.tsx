@@ -1,10 +1,10 @@
 import React from 'react'
 import { useResizeDetector } from 'react-resize-detector';
 import '../../css/TreeMonitor.css'
-import { TreeNode, TreeNodeType } from '../../tree/tree';
-import drawTree from './TreeDrawer';
+import drawTree, { calculateNodeEntities, NodeEntity } from './TreeDrawer';
 import { useSelector } from 'react-redux'
 import { State } from '../../state';
+import { TreeNode, TreeNodeType } from '../../tree/tree';
 
 type CanvasPosition = {
     x: number,
@@ -12,13 +12,16 @@ type CanvasPosition = {
 }
 
 const TreeMonitor = () => {
-    const [position, setPosition] = React.useState<CanvasPosition>({x: 0, y: 0})
+    const [position, setPosition] = React.useState<CanvasPosition>({ x: 0, y: 0 })
     const [positionMoving, setPositionMoving] = React.useState<boolean>(false)
     const [scale, setScale] = React.useState<number>(1)
+    const [nodeEntities, setNodeEntities] = React.useState<NodeEntity[]>([]);
+
+    const [info, setInfo] = React.useState("")
 
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
-    const tree = useSelector((state: State) => state.tree)
+    const treeState = useSelector((state: State) => state.tree)
 
     const draw = () => {
         if (canvasRef && canvasRef.current && canvasRef.current.getContext) {
@@ -29,18 +32,7 @@ const TreeMonitor = () => {
 
                 ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
-                drawTree(ctx, tree, scale, position, containerWidth, containerHeight)
-                ctx.fillStyle = 'rgb(200, 0, 0)'
-                ctx.fillRect(
-                    -400 * scale + position.x * scale + containerWidth / 2, 
-                    -400 * scale + position.y * scale + containerHeight / 2, 
-                    50 * scale, 50 * scale)
-
-                ctx.fillStyle = 'rgba(0, 0, 200, 0.5)'
-                ctx.fillRect(
-                    30 * scale + position.x * scale + containerWidth / 2, 
-                    30 * scale + position.y * scale + containerHeight / 2, 
-                    50 * scale, 50 * scale)
+                drawTree(ctx, nodeEntities, scale, position, containerWidth, containerHeight)
             }
         }
     }
@@ -62,7 +54,31 @@ const TreeMonitor = () => {
 
     const handlePositionMoving = (event: React.MouseEvent) => {
         if (positionMoving) {
-            setPosition({x: position.x + event.movementX / scale, y: position.y + event.movementY / scale})
+            setPosition({ x: position.x + event.movementX / scale, y: position.y + event.movementY / scale })
+        }
+        else {
+            const clientRect = container.ref!.current!.getBoundingClientRect()
+            const mouseX = event.clientX - Math.round(clientRect.x)
+            const mouseY = event.clientY - Math.round(clientRect.y)
+
+            let infoSet = false;
+
+            nodeEntities.forEach(nodeEntity => {
+                const x = (nodeEntity.x + position.x) * scale + (container.ref.current?.clientWidth ?? 0) / 2
+                const y = (nodeEntity.y + position.y) * scale + (container.ref.current?.clientHeight ?? 0) / 2
+
+                if (Math.sqrt(Math.pow((mouseX - x), 2) + Math.pow((mouseY - y), 2)) < nodeEntity.radius * scale) {
+                    if (nodeEntity.node.content != undefined)
+                    {
+                        setInfo(nodeEntity.node.content)
+                    }
+                    infoSet = true;
+                }
+            })
+
+            if (infoSet == false) {
+                setInfo("")
+            }
         }
     }
 
@@ -86,12 +102,37 @@ const TreeMonitor = () => {
         event.deltaY > 0 ? lowerScale() : raiseScale()
     }
 
+    const getOptionsAmount = () => {
+        let nodeSize: number[] = []
+        for (let i = treeState.tree.length - 1; i >= 0; i--)
+        {
+            if (treeState.tree[i].children.length == 0) {
+                nodeSize[i] = 1
+            }
+            else if (treeState.tree[i].type == TreeNodeType.AND)
+            {
+                nodeSize[i] = treeState.tree[i].children.reduce((acc, value) => acc * nodeSize[value], 1)
+            }
+            else
+            {
+                nodeSize[i] = treeState.tree[i].children.reduce((acc, value) => acc + nodeSize[value], 0)
+            }
+        }
+        return nodeSize[0] ?? 0
+    }
+
     React.useEffect(() => {
         draw()
     }, [position, scale, draw])
 
+    React.useEffect(() => {
+        if (treeState.tree) {
+            setNodeEntities(calculateNodeEntities(treeState.tree))
+        }
+    }, [treeState])
+
     return (
-        <div ref={container.ref} className='tree-monitor' 
+        <div ref={container.ref} className='tree-monitor'
             onWheel={wheelHandler}
             onMouseDown={startMovePosition}
             onMouseMove={handlePositionMoving}
@@ -100,6 +141,18 @@ const TreeMonitor = () => {
             <canvas ref={canvasRef} className='tree-canvas'
                 width="0" height="0" style={{ width: "100%", height: "100%" }}>
             </canvas>
+            <div className='tree-size'>
+            {
+                (treeState.tree?.length ?? 0) + " : " +
+                (treeState.tree?.filter(node => node.type === TreeNodeType.OR && node.children.length != 0).length ?? 0) + " : " +
+                getOptionsAmount()
+            } 
+            </div>
+            {info != "" ? (<div className='tree-info'>
+                {
+                    info.split(";").map((content, index) => <div key={index}>{content}</div>)
+                }</div>) : ""
+            }
             <div className='scale-control'>
                 <button id='scale-button-minus' className='scale-control-button' onClick={() => lowerScale()}>-</button>
                 <div className='scale-control-label'>{Math.round(scale * 10) / 10}</div>

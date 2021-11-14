@@ -5,7 +5,8 @@ enum TreeNodeType {
 
 type TreeNode = {
     type: TreeNodeType,
-    children: Array<number>
+    children: Array<number>,
+    content: string
 }
 
 export type { TreeNode }

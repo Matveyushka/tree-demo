@@ -1,11 +1,28 @@
 import { TreeNode } from "../../tree/tree";
 import { TreeActionType } from "../action-types/treeActionTypes";
 
-interface SetTreeAction {
-    type: TreeActionType.SET_TREE,
-    payload: Array<TreeNode>
+interface CompileTreeRequestAction {
+    type: TreeActionType.COMPILE_TREE_REQUEST,
+    payload: string
 }
 
-type TreeAction = SetTreeAction
+interface CompileTreeSuccessAction {
+    type: TreeActionType.COMPILE_TREE_SUCCESS,
+    payload: TreeNode[]
+}
 
-export type { TreeAction }
+interface CompileTreeFailureAction {
+    type: TreeActionType.COMPILE_TREE_FAILURE
+    payload: string
+}
+
+type TreeAction = CompileTreeRequestAction |
+    CompileTreeSuccessAction |
+    CompileTreeFailureAction
+
+export type { 
+    TreeAction, 
+    CompileTreeRequestAction,
+    CompileTreeSuccessAction,
+    CompileTreeFailureAction
+ }

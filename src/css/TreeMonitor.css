@@ -1,3 +1,5 @@
+@import "./Colors.css";
+
 .tree-monitor {
     position: relative;
     height: 100%;
@@ -26,4 +28,22 @@
 .scale-control-label {
     width: 1.4rem;
     padding: 0 0.5rem;
+}
+
+.tree-size {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--color5);
+    background: white;
+}
+
+.tree-info {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--color5);
+    background: white;
 }

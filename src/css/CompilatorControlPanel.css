@@ -1,3 +1,5 @@
+@import 'Colors.css';
+
 .compilator-control-panel {
     width: 100%;
     height: 100%;
@@ -6,8 +8,8 @@
 }
 
 .compilator-control-panel-buttons {
-    background-color: #e1e3e6;
-    border-bottom: 2px solid #abab98;
+    background-color: var(--color4);
+    border-bottom: 2px solid var(--color5);
 }
 
 .compilator-control-panel-button {
@@ -16,5 +18,27 @@
 
 .compilator-control-panel-info {
     flex-grow: 1;
-    background-color: #e1e3e6;
+    padding: 1rem;
+    background-color: var(--color3);
+    font-family: 'Consolas', 'Courier New', Courier, monospace;
+    overflow-y: scroll;
+}
+
+/* Works on Firefox */
+.compilator-control-panel-info {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color5) var(--color3);
+}
+
+/* Works on Chrome, Edge, and Safari */
+.compilator-control-panel-info::-webkit-scrollbar {
+    width: 0.3rem;
+}
+
+.compilator-control-panel-info::-webkit-scrollbar-track {
+    background: var(--color3);
+}
+
+.compilator-control-panel-info::-webkit-scrollbar-thumb {
+    background-color: var(--color5);
 }

@@ -2,58 +2,46 @@ import { TreeNode, TreeNodeType } from "../../tree/tree"
 import { TreeActionType } from "../action-types/treeActionTypes"
 import { TreeAction } from "../actions/treeActions"
 
-const initialState: Array<TreeNode> = [
-    {  
-        type: TreeNodeType.OR,
-        children: [1, 2, 3]
-    },
-    {  
-        type: TreeNodeType.AND,
-        children: [4, 5]
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-    {  
-        type: TreeNodeType.AND,
-        children: [6, 7, 8, 9]
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-    {  
-        type: TreeNodeType.OR,
-        children: []
-    },
-] 
+type TreeState = {
+    awaiting: boolean,
+    tree: Array<TreeNode>,
+    error: string
+}
 
-const reducer = (
-    state: Array<TreeNode> = initialState, 
+const initialTreeState: TreeState = {
+    awaiting: false,
+    tree: [],
+    error: ''
+}  
+
+const treeReducer = (
+    state: TreeState = initialTreeState, 
     action: TreeAction) => {
     switch (action.type) {
-        case TreeActionType.SET_TREE:
-            return action.payload
+        case TreeActionType.COMPILE_TREE_REQUEST:
+            return {
+                ...state,
+                awaiting: true
+            }
+        case TreeActionType.COMPILE_TREE_SUCCESS:
+            return {
+                ...state,
+                awaiting: false,
+                tree: action.payload,
+                error: "",
+            }
+        case TreeActionType.COMPILE_TREE_FAILURE:
+            return {
+                ...state,
+                awaiting: false,
+                tree: [],
+                error: action.payload,
+            }
         default:
             return state
     }
 }
 
-export default reducer
+export default treeReducer
+
+export { initialTreeState }

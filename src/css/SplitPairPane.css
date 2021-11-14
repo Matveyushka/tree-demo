@@ -1,3 +1,5 @@
+@import "Colors.css";
+
 .split-pair-pane {
     height: 100%;
     width: 100%;
@@ -7,7 +9,7 @@
 
 .split-pair-pane-divider {
     position: relative;
-    background-color: #abab98;
+    background-color: var(--color5);
 }
 
 .split-pair-pane-divider-row {
@@ -54,4 +56,6 @@
 
 .split-pair-pane-content-wrapper {
     background-color: #F0D9FF;
+    min-height: 5rem;
+    min-width: 5rem;
 }

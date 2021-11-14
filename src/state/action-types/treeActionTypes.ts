@@ -1,3 +1,5 @@
 export enum TreeActionType {
-    SET_TREE = 'set-tree'
+    COMPILE_TREE_REQUEST = 'compile-tree-request',
+    COMPILE_TREE_SUCCESS = 'compile-tree-success',
+    COMPILE_TREE_FAILURE = 'compile-tree-failure'
 }

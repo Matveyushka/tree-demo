@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import '../css/App.css';
 import SplitPairPane, { SplitPairPaneOrientation } from './SplitPairPane';
 import TreeMonitor from './TreeMonitor';
-import Editor from './Editor';
+import Editor from './Editor/Editor';
 import CompilatorControlPanel from './CompilatorControlPanel';
 import TreeControlPanel from './TreeControlPanel';
 
