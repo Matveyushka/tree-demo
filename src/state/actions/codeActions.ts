@@ -1,13 +1,19 @@
-import { CodeActionType } from "../action-types/codeActionTypes";
+import { CodeActionType } from "../action-types/codeActionTypes"
 
-interface SetCodeAction {
-    type: CodeActionType.SET_CODE,
+interface SetM1CodeAction {
+    type: CodeActionType.SET_M1_CODE,
     payload: string
 }
 
-type CodeAction = SetCodeAction
+interface SetM2CodeAction {
+    type: CodeActionType.SET_M2_CODE,
+    payload: string
+}
+
+type CodeAction = SetM1CodeAction | SetM2CodeAction
 
 export type {
     CodeAction,
-    SetCodeAction
+    SetM1CodeAction,
+    SetM2CodeAction
 }

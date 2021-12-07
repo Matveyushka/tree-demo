@@ -1,17 +1,19 @@
 import React, { useRef } from 'react'
 import '../css/CompilatorControlPanel.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { compileTreeRequest } from '../state/action-creators/treeActionCreators'
-import { State } from '../state/reducers'
+import { useDispatch } from 'react-redux'
+import { clearGenotypeStruct } from '../state/action-creators/genotypeActionCreators'
+import { InfoMessage } from '../state/reducers/infoReducer'
 
-const CompilatorControlPanel = () => {
-    const code = useSelector((state: State) => state.code.code)
+interface CompilatoControlPanelParams {
+    code: string,
+    compileAction: (code: string) => void
+    messages: InfoMessage[]
+}
 
+const CompilatorControlPanel = (params: CompilatoControlPanelParams) => {
     const ref = useRef<HTMLDivElement>(null)
 
     const dispatch = useDispatch()
-
-    const messages = useSelector((state: State) => state.info.messages)
 
     React.useEffect(() => {
         ref!.current!.scrollTop = ref!.current!.scrollHeight
@@ -21,12 +23,13 @@ const CompilatorControlPanel = () => {
         <div className='compilator-control-panel'>
             <div className='compilator-control-panel-buttons'>
                 <button className='compilator-control-panel-button' onClick={() => {
-                    dispatch(compileTreeRequest(code))
+                    dispatch(clearGenotypeStruct())
+                    dispatch(params.compileAction(params.code))
                 }}>Compile</button>
             </div>
             <div ref={ref} className='compilator-control-panel-info'>
                 {
-                    messages.map((message, index) => (<div key={index} style={{ color: message.color }}>
+                    params.messages.map((message, index) => (<div key={index} style={{ color: message.color }}>
                         {message.value}
                     </div>))
                 }

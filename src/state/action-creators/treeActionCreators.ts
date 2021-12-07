@@ -1,6 +1,6 @@
-import { TreeNode } from "../../tree/tree";
-import { TreeActionType } from "../action-types/treeActionTypes";
-import { CompileTreeFailureAction, CompileTreeRequestAction, CompileTreeSuccessAction } from "../actions/treeActions";
+import { TreeNode } from "../../tree/tree"
+import { TreeActionType } from "../action-types/treeActionTypes"
+import { CompileTreeFailureAction, CompileTreeRequestAction, CompileTreeSuccessAction } from "../actions/treeActions"
 
 
 export const compileTreeRequest = (text: string): CompileTreeRequestAction => ({

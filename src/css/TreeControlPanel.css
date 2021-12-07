@@ -3,10 +3,18 @@
 .tree-control-panel {
     height: 100%;
     display: flex;
-    text-align: center;
-    justify-content: center;
-    flex-direction: column;
-    font-size: 3rem;
-    color: var(--color5);
+    flex-direction: row;
     background-color: var(--color3);
+    overflow-x: scroll;
+}
+
+.gene-controller-wrapper {
+    padding: 1rem;
+}
+
+.gene-controller {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: max-content;
 }

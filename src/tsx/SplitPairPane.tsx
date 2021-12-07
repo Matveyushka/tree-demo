@@ -1,5 +1,5 @@
 import React from 'react'
-import '../css/SplitPairPane.css';
+import '../css/SplitPairPane.css'
 
 enum SplitPairPaneOrientation {
     HORIZONTAL = 'row',
@@ -51,9 +51,23 @@ const SplitPairPane = (props: SplitPairPaneProps) => {
         dragPreventDefault(event)
 
         if (event.clientX !== 0 || event.clientY !== 0) {
-            setPosition(props.orientaion === SplitPairPaneOrientation.HORIZONTAL ?
-                event.clientX - dividerSize / 2 :
-                event.clientY - dividerSize / 2)
+            let newPosition = 
+                props.orientaion === SplitPairPaneOrientation.HORIZONTAL ?
+                event.clientX - (containerRef?.current?.getBoundingClientRect().left ?? 0) - dividerSize / 2 :
+                event.clientY - (containerRef?.current?.getBoundingClientRect().top ?? 0) - dividerSize / 2
+
+            if (newPosition < 100) {
+                newPosition = 100
+            }
+            if (props.orientaion === SplitPairPaneOrientation.HORIZONTAL && newPosition > (containerRef?.current?.getBoundingClientRect().width ?? 0) - 100)
+            {
+                newPosition = (containerRef?.current?.getBoundingClientRect().width ?? 0) - 100
+            }
+            if (props.orientaion === SplitPairPaneOrientation.VERTICAL && newPosition > (containerRef?.current?.getBoundingClientRect().height ?? 0) - 100)
+            {
+                newPosition = (containerRef?.current?.getBoundingClientRect().height ?? 0) - 100
+            }
+            setPosition(newPosition)
         }
     }
 
@@ -80,8 +94,8 @@ const SplitPairPane = (props: SplitPairPaneProps) => {
                 </div>
             <div className={`split-pair-pane-content-wrapper split-pair-pane-content-wrapper-${props.orientaion}`}
                 style={props.orientaion === SplitPairPaneOrientation.HORIZONTAL ?
-                    { width: `${(containerRef.current?.clientWidth ?? 0) - position - (dividerRef.current?.clientWidth ?? 0)}px` } :
-                    { height: `${(containerRef.current?.clientHeight ?? 0) - position - (dividerRef.current?.clientHeight ?? 0)}px` }}>
+                    { width: `${(containerRef.current?.getBoundingClientRect().width ?? 0) - position - (dividerRef.current?.getBoundingClientRect().width ?? 0)}px` } :
+                    { height: `${(containerRef.current?.getBoundingClientRect().height ?? 0) - position - (dividerRef.current?.getBoundingClientRect().height ?? 0)}px` }}>
                 {childrenArray[1]}
             </div>
         </div>

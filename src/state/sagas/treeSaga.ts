@@ -1,7 +1,8 @@
-import axios, { AxiosError, AxiosResponse } from "axios"
+import axios, { AxiosResponse } from "axios"
 import { all, call, put, takeLatest } from 'redux-saga/effects'
-import { TreeNode } from "../../tree/tree"
-import { writeError, writeInfo } from "../action-creators/infoActionCreators"
+import { GetGenotypeStruct, TreeNode } from "../../tree/tree"
+import { setGenotypeStruct } from "../action-creators/genotypeActionCreators"
+import { writeM1Error, writeM1Info } from "../action-creators/infoActionCreators"
 import { compileTreeFailure, compileTreeSuccess } from "../action-creators/treeActionCreators"
 import { TreeActionType } from "../action-types/treeActionTypes"
 import { CompileTreeRequestAction } from "../actions/treeActions"
@@ -13,21 +14,22 @@ const compileTree = (code: string) => {
 
 function* compileTreeSaga(action: CompileTreeRequestAction) {
     try {
-        yield put(writeInfo("Compiling..."))
+        yield put(writeM1Info("Compiling..."))
         const response: AxiosResponse<TreeNode[]> = yield call(compileTree, action.payload)
         yield put(compileTreeSuccess(response.data))
-        yield put(writeInfo("Compiled successfully"))
+        yield put(setGenotypeStruct(GetGenotypeStruct(response.data)))
+        yield put(writeM1Info("Compiled successfully"))
     } catch (e: any) {
         yield put(
             compileTreeFailure("Fail")
         )
         if (e.response !== undefined) {
             yield put(
-                writeError(e.response.data)
+                writeM1Error(e.response.data)
             )
         } else {
             yield put(
-                writeError("It looks like server does not response!")
+                writeM1Error("It looks like server does not response!")
             )   
         }
     }

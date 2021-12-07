@@ -1,7 +1,7 @@
 import { InfoActionType } from "../action-types/infoActionTypes"
 import { InfoAction } from "../actions/infoAction"
 
-type InfoMessage = {
+export type InfoMessage = {
     value: string,
     color: string
 }
@@ -17,31 +17,48 @@ const createErrorMessage = (value: string): InfoMessage => ({
 })
 
 type InfoState = {
-    messages: InfoMessage[]
+    m1Messages: InfoMessage[],
+    m2Messages: InfoMessage[]
 }
 
 const initialState: InfoState = {
-    messages: []
+    m1Messages: [],
+    m2Messages: []
 }
 
 const infoReducer = (
     state: InfoState = initialState,
     action: InfoAction) => {
-    switch(action.type) {
-        case InfoActionType.WRITE_INFO:
+    switch (action.type) {
+        case InfoActionType.WRITE_M1_INFO:
             return {
                 ...state,
-                messages: [...state.messages, createInfoMessage(action.payload)]
+                m1Messages: [...state.m1Messages, createInfoMessage(action.payload)]
             }
-        case InfoActionType.WRITE_ERROR:
+        case InfoActionType.WRITE_M1_ERROR:
             return {
                 ...state,
-                messages: [...state.messages, createErrorMessage(action.payload)]
+                m1Messages: [...state.m1Messages, createErrorMessage(action.payload)]
             }
-        case InfoActionType.CLEAR:
+        case InfoActionType.CLEAR_M1:
             return {
                 ...state,
-                messages: []
+                m1Messages: []
+            }
+        case InfoActionType.WRITE_M2_INFO:
+            return {
+                ...state,
+                m2Messages: [...state.m1Messages, createInfoMessage(action.payload)]
+            }
+        case InfoActionType.WRITE_M2_ERROR:
+            return {
+                ...state,
+                m2Messages: [...state.m1Messages, createErrorMessage(action.payload)]
+            }
+        case InfoActionType.CLEAR_M2:
+            return {
+                ...state,
+                m2Messages: []
             }
         default:
             return state

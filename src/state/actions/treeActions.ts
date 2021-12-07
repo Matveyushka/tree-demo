@@ -1,5 +1,5 @@
-import { TreeNode } from "../../tree/tree";
-import { TreeActionType } from "../action-types/treeActionTypes";
+import { TreeNode } from "../../tree/tree"
+import { TreeActionType } from "../action-types/treeActionTypes"
 
 interface CompileTreeRequestAction {
     type: TreeActionType.COMPILE_TREE_REQUEST,

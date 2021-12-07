@@ -1,24 +1,32 @@
 import React from 'react'
 import AceEditor from 'react-ace'
-import { useResizeDetector } from 'react-resize-detector';
+import { useResizeDetector } from 'react-resize-detector'
 
-import "ace-builds/src-noconflict/mode-text";
-import "ace-builds/src-noconflict/theme-textmate";
-import { useDispatch } from 'react-redux';
-import { setCode } from '../../state/action-creators/codeActionCreators';
+import "ace-builds/src-noconflict/mode-text"
+import "ace-builds/src-noconflict/theme-textmate"
+import { useDispatch } from 'react-redux'
+
+import '../css/Editor.css'
 
 type EditorSize = {
     width: number,
     height: number
 }
 
-const Editor = () => {
+interface EditorParams {
+    initCode: string,
+    setCodeAction: (code: string) => void
+}
+
+const Editor = (params: EditorParams) => {
+    const [ initCode ] = React.useState(params.initCode)
+
     const [ editorSize, setEditorSize ] = React.useState<EditorSize>({width: 0, height: 0})
 
     const dispatch = useDispatch()
 
     const updateCode = (code: string) => {
-        dispatch(setCode(code))
+        dispatch(params.setCodeAction(code))
     }
 
     const editorWrapper = useResizeDetector<HTMLDivElement>({
@@ -30,17 +38,25 @@ const Editor = () => {
         }
     })
 
+    const editorRef = React.useRef(null)
+
     React.useEffect(() => {
-        console.log(editorWrapper.ref.current?.clientWidth)
         setEditorSize({
             width: editorWrapper.ref.current?.clientWidth || 0,
             height: editorWrapper.ref.current?.clientHeight || 0
         })
     }, [editorWrapper.ref])
 
+    React.useEffect(() => {
+        let anything: any = (editorRef?.current)
+        anything.editor.setValue(initCode)
+        anything.editor.clearSelection()
+    }, [initCode])
+
     return (
         <div ref={editorWrapper.ref} style={{width: '100%', height: '100%'}}>
             <AceEditor
+                ref={editorRef}
                 mode="text"
                 theme="textmate"
                 onChange={(value) => { updateCode(value) }}

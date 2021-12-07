@@ -1,4 +1,5 @@
 import { CanvasPosition } from '.'
+import { Gene } from '../../state/types'
 import { TreeNode, TreeNodeType } from '../../tree/tree'
 
 const nodeAreaWidth = 20
@@ -9,6 +10,7 @@ type NodeEntity = {
     x: number,
     y: number,
     radius: number,
+    choosen: boolean,
 }
 
 const calculateNodeEntity = (
@@ -28,7 +30,8 @@ const calculateNodeEntity = (
         node: treeArray[index],
         x,
         y,
-        radius
+        radius,
+        choosen: false
     }
 
     let currentOffset = offset
@@ -74,7 +77,7 @@ const calculateNodeEntities = (
         )
     }
 
-    return nodeEntities;
+    return nodeEntities
 }
 
 const drawTree = (
@@ -83,30 +86,74 @@ const drawTree = (
     scale: number,
     position: CanvasPosition,
     canvasWidth: number,
-    canvasHeight: number) => {
+    canvasHeight: number,
+    showGenotype: boolean,
+    genotype: Gene[]
+) => {
 
-    nodeEntities.forEach(nodeEntity => {
+    nodeEntities.forEach(nodeEntity => nodeEntity.choosen = false)
+
+    nodeEntities.forEach((nodeEntity, index) => {
+        let choosen = nodeEntity.choosen && showGenotype
+        if (index === 0) {
+            choosen = showGenotype
+        }
+        if (choosen) {
+            if (nodeEntity.node.type === TreeNodeType.AND) {
+                nodeEntity.node.children.forEach(nodeIndex => nodeEntities[nodeIndex].choosen = true)
+            }
+            else {
+                if (nodeEntity.node.children.length > 0) {
+                    const gene = genotype.filter(gene => gene.nodeIndex === index)[0]
+                    nodeEntities[nodeEntity.node.children[gene.value - 1]].choosen = true
+                }
+            }
+        }
+
         const x = (nodeEntity.x + position.x) * scale + canvasWidth / 2
         const y = (nodeEntity.y + position.y) * scale + canvasHeight / 2
 
         nodeEntity.node.children.forEach(child => {
-            const childX = (nodeEntities[child].x + position.x) * scale + canvasWidth / 2
-            const childY = (nodeEntities[child].y + position.y) * scale + canvasHeight / 2
+            if (!nodeEntities[child].choosen) {
+                const childX = (nodeEntities[child].x + position.x) * scale + canvasWidth / 2
+                const childY = (nodeEntities[child].y + position.y) * scale + canvasHeight / 2
 
-            context.beginPath()
-            context.moveTo(x, y)
-            context.lineTo(childX, childY)
-            context.stroke()
+                context.strokeStyle = 'black'
+                context.lineWidth = 1
+                context.beginPath()
+                context.moveTo(x, y)
+                context.lineTo(x, (childY + y) / 2)
+                context.lineTo(childX, (childY + y) / 2)
+                context.lineTo(childX, childY)
+                context.stroke()
+            }
+        })
+
+        nodeEntity.node.children.forEach(child => {
+            if (nodeEntities[child].choosen) {
+                const childX = (nodeEntities[child].x + position.x) * scale + canvasWidth / 2
+                const childY = (nodeEntities[child].y + position.y) * scale + canvasHeight / 2
+
+                context.strokeStyle = 'red'
+                context.lineWidth = 2
+                context.beginPath()
+                context.moveTo(x, y)
+                context.lineTo(x, (childY + y) / 2)
+                context.lineTo(childX, (childY + y) / 2)
+                context.lineTo(childX, childY)
+                context.stroke()
+            }
         })
 
         context.fillStyle = nodeEntity.node.type === TreeNodeType.AND ?
-            'black' :
+            (choosen ? 'red' : 'black') :
             'white'
+        context.lineWidth = (choosen ? 2 : 1)
         context.beginPath()
         context.arc(x, y, nodeEntity.radius * scale, 0, 2 * Math.PI)
         context.fill()
-        context.fillStyle = 'black'
-        context.stroke();
+        context.strokeStyle = choosen ? 'red' : 'black'
+        context.stroke()
     })
 }
 

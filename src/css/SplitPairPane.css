@@ -5,6 +5,7 @@
     width: 100%;
 
     display: flex;
+    overflow: hidden;
 }
 
 .split-pair-pane-divider {

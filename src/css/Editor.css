@@ -1,0 +1,17 @@
+.ace_scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color5) white;
+}
+
+.ace_scrollbar::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 0.5rem;
+}
+
+.ace_scrollbar::-webkit-scrollbar-track {
+    background: white;
+}
+
+.ace_scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--color5);
+}

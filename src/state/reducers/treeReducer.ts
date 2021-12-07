@@ -1,4 +1,4 @@
-import { TreeNode, TreeNodeType } from "../../tree/tree"
+import { TreeNode } from "../../tree/tree"
 import { TreeActionType } from "../action-types/treeActionTypes"
 import { TreeAction } from "../actions/treeActions"
 

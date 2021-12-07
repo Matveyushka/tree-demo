@@ -1,0 +1,32 @@
+.navigation {
+    display: flex;
+    background-color: var(--color3);
+    border-bottom: 0.1rem solid var(--color5);
+    height: 50px;
+    width: 100%;
+}
+
+.navigation-button {
+    box-sizing: border-box;
+    user-select: none;
+    padding: 1rem 2rem;
+    background-color: var(--color3);
+}
+
+.navigation-button:hover {
+    background-color: var(--color5);
+}
+
+.navigation-button:active {
+    background-color: var(--color6);
+}
+
+.active-left {
+    border: 0.1rem solid red;
+    border-right: none;
+}
+
+.active-right {
+    border: 0.1rem solid red;
+    border-left: none;
+}

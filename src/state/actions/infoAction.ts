@@ -1,26 +1,46 @@
-import { InfoActionType } from "../action-types/infoActionTypes";
+import { InfoActionType } from "../action-types/infoActionTypes"
 
-interface WriteInfoAction {
-    type: InfoActionType.WRITE_INFO,
+interface WriteM1InfoAction {
+    type: InfoActionType.WRITE_M1_INFO,
     payload: string
 }
 
-interface WriteErrorAction {
-    type: InfoActionType.WRITE_ERROR,
+interface WriteM1ErrorAction {
+    type: InfoActionType.WRITE_M1_ERROR,
     payload: string
 }
 
-interface ClearAction {
-    type: InfoActionType.CLEAR
+interface WriteM2InfoAction {
+    type: InfoActionType.WRITE_M2_INFO,
+    payload: string
 }
 
-type InfoAction = WriteInfoAction |
-    WriteErrorAction |
-    ClearAction
+interface WriteM2ErrorAction {
+    type: InfoActionType.WRITE_M2_ERROR,
+    payload: string
+}
 
-export type {
+interface ClearM1Action {
+    type: InfoActionType.CLEAR_M1
+}
+
+interface ClearM2Action {
+    type: InfoActionType.CLEAR_M2
+}
+
+type InfoAction = WriteM1InfoAction |
+    WriteM1ErrorAction |
+    WriteM2InfoAction |
+    WriteM2ErrorAction |
+    ClearM1Action |
+    ClearM2Action
+
+export type { 
     InfoAction,
-    WriteInfoAction,
-    WriteErrorAction,
-    ClearAction
-}
+    WriteM1InfoAction,
+    WriteM1ErrorAction,
+    WriteM2InfoAction,
+    WriteM2ErrorAction,
+    ClearM1Action,
+    ClearM2Action
+ }
