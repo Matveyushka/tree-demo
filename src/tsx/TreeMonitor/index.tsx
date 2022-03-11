@@ -5,7 +5,6 @@ import drawTree, { calculateNodeEntities, NodeEntity } from './TreeDrawer'
 import { useSelector } from 'react-redux'
 import { State } from '../../state'
 import { TreeNodeType } from '../../tree/tree'
-import { stat } from 'fs'
 
 type CanvasPosition = {
     x: number,

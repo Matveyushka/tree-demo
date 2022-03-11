@@ -1,18 +1,51 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { useResizeDetector } from 'react-resize-detector'
 import '../../css/StructureMonitor.css'
+import { State } from '../../state'
+import { ConnectionM2 } from '../../structure/ConnectionM2'
+import { ModuleM2 } from '../../structure/ModuleM2'
+import { drawStructure } from './StructureDrawer'
 
 type CanvasPosition = {
     x: number,
     y: number
 }
 
+export type ModuleEntity = {
+    x: number,
+    y: number,
+    module: ModuleM2
+}
+
+export type ConnectionEntity = {
+    connection: ConnectionM2
+}
+
 const TreeMonitor = () => {
     const [position, setPosition] = React.useState<CanvasPosition>({ x: 0, y: 0 })
     const [positionMoving, setPositionMoving] = React.useState<boolean>(false)
+    const [modules, setModules] = React.useState<ModuleEntity[]>([])
+    const [connections, setConnections] = React.useState<ConnectionEntity[]>([])
     const [scale, setScale] = React.useState<number>(1)
 
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
+
+    const structure = useSelector((state: State) => state.structure.structure)
+
+    React.useEffect(() => {
+        setModules(structure.modules.map((module, index) => ({
+            x: 30 * index,
+            y: 0,
+            module
+        })))
+    }, [structure.modules])
+
+    React.useEffect(() => {
+        setConnections(structure.connections.map((connection, index) => ({
+            connection
+        })))
+    }, [structure.connections])
 
     const container = useResizeDetector<HTMLDivElement>({
         onResize: () => {
@@ -33,16 +66,18 @@ const TreeMonitor = () => {
 
                 ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
-                ctx.fillStyle = 'blue'
-                ctx.lineWidth = 1
-                ctx.beginPath()
-                ctx.arc(containerWidth / 2 * scale, containerHeight / 2 * scale, 20 * scale, 0, 2 * Math.PI)
-                ctx.fill()
-                ctx.strokeStyle = 'blue'
-                ctx.stroke()
+                drawStructure(
+                    ctx,
+                    modules,
+                    connections,
+                    scale,
+                    position,
+                    containerWidth,
+                    containerHeight
+                )
             }
         }
-    }, [container.ref, scale])
+    }, [connections, container.ref, modules, position, scale])
 
     const startMovePosition = (event: React.MouseEvent) => {
         setPositionMoving(true)

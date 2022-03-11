@@ -48,12 +48,12 @@ const infoReducer = (
         case InfoActionType.WRITE_M2_INFO:
             return {
                 ...state,
-                m2Messages: [...state.m1Messages, createInfoMessage(action.payload)]
+                m2Messages: [...state.m2Messages, createInfoMessage(action.payload)]
             }
         case InfoActionType.WRITE_M2_ERROR:
             return {
                 ...state,
-                m2Messages: [...state.m1Messages, createErrorMessage(action.payload)]
+                m2Messages: [...state.m2Messages, createErrorMessage(action.payload)]
             }
         case InfoActionType.CLEAR_M2:
             return {

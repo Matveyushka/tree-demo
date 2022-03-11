@@ -4,16 +4,17 @@ import { writeM2Error, writeM2Info } from "../action-creators/infoActionCreators
 import { buildStructureFailure, buildStructureSuccess } from "../action-creators/structureActionCreators"
 import { StructureActionTypes } from "../action-types/structureActionTypes"
 import { BuildStructureRequestAction } from "../actions/structureActions"
+import { Structure } from "../reducers/structureReducer"
 
 const buildStructure = (code: string) => {
-    return axios.post('https://localhost:5001/buildstructure', { code })
+    return axios.post('https://localhost:5001/buildstructura', code)
 }
 
 function* buildStructureSaga(action: BuildStructureRequestAction) {
     try {
         yield put(writeM2Info("M2 Compiling..."))
-        const response: AxiosResponse<string> = yield call(buildStructure, action.payload)
-        //yield put(buildStructureSuccess(response.data))
+        const response: AxiosResponse<Structure> = yield call(buildStructure, action.payload)
+        //yield put(buildStructureSuccess("hello"))
         yield put(writeM2Info("M2 Compiled successfully"))
     } catch (e: any) {
         yield put(

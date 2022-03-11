@@ -3,6 +3,7 @@ import {
     BuildStructureFailureAction, 
     BuildStructureRequestAction, 
     BuildStructureSuccessAction } from "../actions/structureActions"
+import { Structure } from "../reducers/structureReducer"
 
 
 export const buildStructureRequest = (text: string): 
@@ -12,7 +13,7 @@ BuildStructureRequestAction => ({
 })
 
 export const buildStructureSuccess = (
-    payload: string
+    payload: Structure
 ): BuildStructureSuccessAction => ({
     type: StructureActionTypes.BUILD_STRUCTURE_SUCCESS,
     payload

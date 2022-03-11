@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios"
 import { all, call, put, takeLatest } from 'redux-saga/effects'
 import { GetGenotypeStruct, TreeNode } from "../../tree/tree"
-import { setGenotypeStruct } from "../action-creators/genotypeActionCreators"
+import { clearGenotypeStruct, setGenotypeStruct } from "../action-creators/genotypeActionCreators"
 import { writeM1Error, writeM1Info } from "../action-creators/infoActionCreators"
 import { compileTreeFailure, compileTreeSuccess } from "../action-creators/treeActionCreators"
 import { TreeActionType } from "../action-types/treeActionTypes"
@@ -16,6 +16,7 @@ function* compileTreeSaga(action: CompileTreeRequestAction) {
     try {
         yield put(writeM1Info("Compiling..."))
         const response: AxiosResponse<TreeNode[]> = yield call(compileTree, action.payload)
+        yield put(clearGenotypeStruct())
         yield put(compileTreeSuccess(response.data))
         yield put(setGenotypeStruct(GetGenotypeStruct(response.data)))
         yield put(writeM1Info("Compiled successfully"))

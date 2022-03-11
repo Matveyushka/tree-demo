@@ -5,8 +5,8 @@ import { clearGenotypeStruct } from '../state/action-creators/genotypeActionCrea
 import { InfoMessage } from '../state/reducers/infoReducer'
 
 interface CompilatoControlPanelParams {
-    code: string,
-    compileAction: (code: string) => void
+    code: any,
+    compileAction: (code: any) => void
     messages: InfoMessage[]
 }
 
@@ -23,7 +23,8 @@ const CompilatorControlPanel = (params: CompilatoControlPanelParams) => {
         <div className='compilator-control-panel'>
             <div className='compilator-control-panel-buttons'>
                 <button className='compilator-control-panel-button' onClick={() => {
-                    dispatch(clearGenotypeStruct())
+                    console.log("CODE")
+                    console.log(params.code)
                     dispatch(params.compileAction(params.code))
                 }}>Compile</button>
             </div>

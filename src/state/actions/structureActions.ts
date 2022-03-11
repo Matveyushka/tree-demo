@@ -1,4 +1,5 @@
 import { StructureActionTypes } from "../action-types/structureActionTypes"
+import { Structure } from "../reducers/structureReducer"
 
 interface BuildStructureRequestAction {
     type: StructureActionTypes.BUILD_STRUCTURE_REQUEST,
@@ -7,7 +8,7 @@ interface BuildStructureRequestAction {
 
 interface BuildStructureSuccessAction {
     type: StructureActionTypes.BUILD_STRUCTURE_SUCCESS,
-    payload: string
+    payload: Structure
 }
 
 interface BuildStructureFailureAction {
