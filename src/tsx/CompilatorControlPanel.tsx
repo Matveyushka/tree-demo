@@ -1,7 +1,6 @@
 import React, { useRef } from 'react'
 import '../css/CompilatorControlPanel.css'
 import { useDispatch } from 'react-redux'
-import { clearGenotypeStruct } from '../state/action-creators/genotypeActionCreators'
 import { InfoMessage } from '../state/reducers/infoReducer'
 
 interface CompilatoControlPanelParams {
@@ -23,8 +22,6 @@ const CompilatorControlPanel = (params: CompilatoControlPanelParams) => {
         <div className='compilator-control-panel'>
             <div className='compilator-control-panel-buttons'>
                 <button className='compilator-control-panel-button' onClick={() => {
-                    console.log("CODE")
-                    console.log(params.code)
                     dispatch(params.compileAction(params.code))
                 }}>Compile</button>
             </div>

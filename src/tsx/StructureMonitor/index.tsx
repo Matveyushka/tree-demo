@@ -3,8 +3,6 @@ import { useSelector } from 'react-redux'
 import { useResizeDetector } from 'react-resize-detector'
 import '../../css/StructureMonitor.css'
 import { State } from '../../state'
-import { ConnectionM2 } from '../../structure/ConnectionM2'
-import { ModuleM2 } from '../../structure/ModuleM2'
 import { drawStructure } from './StructureDrawer'
 
 type CanvasPosition = {
@@ -12,40 +10,13 @@ type CanvasPosition = {
     y: number
 }
 
-export type ModuleEntity = {
-    x: number,
-    y: number,
-    module: ModuleM2
-}
-
-export type ConnectionEntity = {
-    connection: ConnectionM2
-}
-
 const TreeMonitor = () => {
     const [position, setPosition] = React.useState<CanvasPosition>({ x: 0, y: 0 })
     const [positionMoving, setPositionMoving] = React.useState<boolean>(false)
-    const [modules, setModules] = React.useState<ModuleEntity[]>([])
-    const [connections, setConnections] = React.useState<ConnectionEntity[]>([])
     const [scale, setScale] = React.useState<number>(1)
+    const structureState = useSelector((state: State) => state.structure)
 
     const canvasRef = React.useRef<HTMLCanvasElement>(null)
-
-    const structure = useSelector((state: State) => state.structure.structure)
-
-    React.useEffect(() => {
-        setModules(structure.modules.map((module, index) => ({
-            x: 30 * index,
-            y: 0,
-            module
-        })))
-    }, [structure.modules])
-
-    React.useEffect(() => {
-        setConnections(structure.connections.map((connection, index) => ({
-            connection
-        })))
-    }, [structure.connections])
 
     const container = useResizeDetector<HTMLDivElement>({
         onResize: () => {
@@ -66,18 +37,19 @@ const TreeMonitor = () => {
 
                 ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
 
-                drawStructure(
-                    ctx,
-                    modules,
-                    connections,
-                    scale,
-                    position,
-                    containerWidth,
-                    containerHeight
-                )
+                if (structureState.structure !== null) {
+                    drawStructure(
+                        ctx,
+                        structureState.structure,
+                        scale,
+                        position,
+                        containerWidth,
+                        containerHeight
+                    )
+                }
             }
         }
-    }, [connections, container.ref, modules, position, scale])
+    }, [structureState, container.ref, position, scale])
 
     const startMovePosition = (event: React.MouseEvent) => {
         setPositionMoving(true)
@@ -88,9 +60,9 @@ const TreeMonitor = () => {
             setPosition({ x: position.x + event.movementX / scale, y: position.y + event.movementY / scale })
         }
         else {
-            const clientRect = container.ref!.current!.getBoundingClientRect()
-            const mouseX = event.clientX - Math.round(clientRect.x)
-            const mouseY = event.clientY - Math.round(clientRect.y)
+            /*const clientRect = container.ref!.current!.getBoundingClientRect()
+            /*const mouseX = event.clientX - Math.round(clientRect.x)
+            const mouseY = event.clientY - Math.round(clientRect.y)*/
         }
     }
 

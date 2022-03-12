@@ -1,19 +1,20 @@
+import { Module } from "../../structure/module"
+import { Identificator } from "../../tsx/StructureIdMonitor"
 import { StructureActionTypes } from "../action-types/structureActionTypes"
 import { 
     BuildStructureFailureAction, 
     BuildStructureRequestAction, 
     BuildStructureSuccessAction } from "../actions/structureActions"
-import { Structure } from "../reducers/structureReducer"
 
 
-export const buildStructureRequest = (text: string): 
+export const buildStructureRequest = (code: string): 
 BuildStructureRequestAction => ({
     type: StructureActionTypes.BUILD_STRUCTURE_REQUEST,
-    payload: text
+    payload: code
 })
 
 export const buildStructureSuccess = (
-    payload: Structure
+    payload: Module
 ): BuildStructureSuccessAction => ({
     type: StructureActionTypes.BUILD_STRUCTURE_SUCCESS,
     payload

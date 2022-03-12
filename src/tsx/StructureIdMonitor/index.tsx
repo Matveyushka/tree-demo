@@ -10,7 +10,7 @@ import IdTree from './IdTree'
 type Identificator = {
     name: string,
     features: Map<string, string>
-    submodules: Identificator[]
+    submodules: Map<string, Identificator[]>
 }
 
 const extractContent = (tree: TreeNode[], genotype: Gene[]) => {
@@ -37,28 +37,46 @@ const extractContent = (tree: TreeNode[], genotype: Gene[]) => {
 }
 
 const handleContent = (content: string[], id: Identificator) => {
-    if (content.length === 3) {
+    if (content.length === 4) {
         id.name = content[0]
-        id.features.set(content[1], content[2])
+        id.features.set(content[2], content[3])
     }
     else {
-        const subId = id.submodules.filter(child => child.name === content[1])[0]
+        const subId = id.submodules.get(content[2])
         if (subId !== undefined) {
-            handleContent(content.slice(1), subId)
+            if (subId[parseInt(content[3])] === undefined) {
+                subId[parseInt(content[3])] = {
+                    name: content[2],
+                    features: new Map(),
+                    submodules: new Map()
+                }
+            }
+            handleContent(content.slice(2), subId[parseInt(content[3])])
         }
         else {
-            id.submodules.push({
-                name: content[1],
+            id.submodules.set(content[2], [{
+                name: content[2],
                 features: new Map(),
-                submodules: []
-            })
-            handleContent(content.slice(1), id.submodules[id.submodules.length - 1])
+                submodules: new Map()
+            }])
+            const uuu = id.submodules.get(content[2])
+            if (uuu !== undefined) {
+                if (uuu[parseInt(content[3])] === undefined) {
+                    uuu[parseInt(content[3])] = {
+                        name: content[2],
+                        features: new Map(),
+                        submodules: new Map()
+                    }
+                }
+                handleContent(content.slice(2), uuu[parseInt(content[3])])
+            }
         }
     }
 }
 
 const divideContent = (content: string[]): Identificator | null => {
-    const divided = content.map(str => str.split(/[;:. ]+/))
+    const divided = content.map(str => str.split(/[[\];:. ]+/))
+    
     for (let i = 0; i !== divided.length; i++) {
         divided[i].pop()
     }
@@ -70,7 +88,7 @@ const divideContent = (content: string[]): Identificator | null => {
     const id: Identificator = {
         name: divided[0][0],
         features: new Map(),
-        submodules: []
+        submodules: new Map()
     }
 
     for (let i = 0; i !== divided.length; i++) {
@@ -89,7 +107,7 @@ const StructureIdMonitor = () => {
 
     return (
         <div className="structure-id-monitor">
-            {id !== null ? <IdTree id={id} /> : ''}
+            {id !== null ? <IdTree id={id} index={0}/> : ''}
         </div>
     )
 }

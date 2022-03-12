@@ -1,3 +1,4 @@
+import React from "react"
 import { useSelector } from "react-redux"
 import { State } from "../../state"
 import { buildStructureRequest } from "../../state/action-creators/structureActionCreators"
@@ -7,7 +8,7 @@ import { getIdFromTree, Identificator } from "../StructureIdMonitor"
 type IdDto = {
     name: string,
     features: { [key: string]: string; },
-    submodules: (IdDto | null)[]
+    submodules: Map<string, Identificator[]>
 }
 
 const M2CompilatorControlPanel = () => {
@@ -31,17 +32,14 @@ const M2CompilatorControlPanel = () => {
             return ({
                 name: id.name,
                 features: featuresArray,
-                submodules: id.submodules.map(submodule => getId(submodule))
+                submodules: id.submodules
             })
         }
         return null
     }
 
     return (
-        <CompilatorControlPanel code={{
-            code,
-            id: getId(getIdFromTree(tree, genotype))
-        }} messages={info} compileAction={buildStructureRequest} />
+        <CompilatorControlPanel code={code} messages={info} compileAction={buildStructureRequest} />
     )
 }
 

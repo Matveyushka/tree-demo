@@ -5,11 +5,17 @@ import { rootSaga } from "./sagas"
 
 const sagaMiddleware = createSagaMiddleware()
 
-const composeEnhancers =  typeof window === 'object' && (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] ? 
-(window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']({ }) : compose
+const composeEnhancers = typeof window === 'object' && (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] ?
+    (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__']({
+        serialize: {
+            options: {
+                map: true,
+            }
+        }
+    }) : compose
 
 const store = createStore(
-    reducers, 
+    reducers,
     {},
     composeEnhancers(applyMiddleware(sagaMiddleware)))
 
