@@ -7,52 +7,40 @@ type CodeState = {
 }
 
 const initialCodeState: CodeState = {
-    m1code: `Structuralist
+    m1code: `Module Basic
+    Feature Dummy value
 
-    ModuleM1 Basic
+Module Complex
+    Feature Size one two
     
-        ItemsGroup Dummy Value EndItemsGroup
+    Case Size one
+    Generate 1 modules Basic Simple
     
-    EndModuleM1
+    Case Size two
+    Generate 2 modules Basic Simple
+
+Module Main
+    Feature Type rectangle
     
-    
-    ModuleM1 Complex
-    
-        ItemsGroup Size One Two EndItemsGroup
-        
-        ForCase Size One
-        Repeat 1 LinkTo Basic
-    
-    EndModuleM1
-    
-    
-    ModuleM1 Main
-    
-        ItemsGroup Type Rectangle EndItemsGroup
-        
-        ForCase Type Rectangle
-        Repeat 10 LinkTo Basic
-        
-        ForCase Type Rectangle
-        Repeat 2 LinkTo Complex
-    
-    EndModuleM1
-    
-    
-    EndStructuralist
-    
-    Generate Main`,
+    Case Type rectangle
+    Generate 10 modules Basic
+    , 1 + 1 modules Complex
+
+Create Main`,
     m2code: `Structura Basic 1-1-1-1
 
-    Structura Complex 0-2-0-0
+    Structura Complex 2
+        Position Basic
+            On First Place 0, 0
+            On Last Place 30, 0
         Feature Size
-            Case One
+            Case one
                 List Basic
                     On First
-                        Link    Port 0n - Basic[0](0w),
-                                Port 1n - Basic[0](0e)
+                        Link    Port 0 - Basic[0](0w),
+                                Port 1 - Basic[0](0e)
     
-    Structura Main 1-0-1-0
+    Structura Main 2
         Position Basic
             On \\2 Place 20*I, 0
             On not \\2 Place 20*(I-1), 20
@@ -60,24 +48,24 @@ const initialCodeState: CodeState = {
             On First Place 10, 40
             On Last Place 130, 40
         Feature Type
-            Case Rectangle
+            Case rectangle
                 List Basic
                     On First
-                        Link    Port 0w - Basic[I](0w)
+                        Link    Port 1 - Basic[I](0w)
                     On Last
-                        Link    Port 0e - Basic[I-1](0e),
+                        Link    Port 0 - Basic[I-1](0e),
                                 Basic[I](0n) - Basic[I-1](0s)
                     On not \\2, not Last
                         Link    Basic[I](0n) - Basic[I-1](0s),
                                 Basic[I](0e) - Basic[I+2](0w),
                                 Basic[I-1](0e) - Basic[I+1](0w)
                     On 1
-                        Link    Basic[I](0s) - Complex[0](0n)
+                        Link    Basic[I](0s) - Complex[0](0)
                     On 3
-                        Link    Basic[I](0s) - Complex[0](1n)
+                        Link    Basic[I](0s) - Complex[0](1)
                     On Last
-                        Link    Basic[I - 2](0s) - Complex[1](0n),
-                                Basic[I](0s) - Complex[1](1n)`
+                        Link    Basic[I - 2](0s) - Complex[1](0),
+                                Basic[I](0s) - Complex[1](1)`
 }
 
 const codeReducer = (

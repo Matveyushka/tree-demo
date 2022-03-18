@@ -3,19 +3,24 @@ import { useDispatch, useSelector } from 'react-redux'
 import '../../css/TreeControlPanel.css'
 import { State } from '../../state'
 import { setGenotype } from '../../state/action-creators/genotypeActionCreators'
+import { buildStructureRequest } from '../../state/action-creators/structureActionCreators'
 import GeneController from './GeneController'
 
 const TreeControlPanel = () => {
     const genotypeState = useSelector((state: State) => state.genotype)
+    const structureCode = useSelector((state: State) => state.code.m2code)
     const dispatch = useDispatch()
 
     const updateGenotype = (updatedIndex: number, newValue: number) => {
-        dispatch(setGenotype(genotypeState.choosenGenotype.map((value, index) => {
+        const newGenotype = genotypeState.choosenGenotype.map((value, index) => {
             return (updatedIndex === value.nodeIndex) ? {
                 nodeIndex: value.nodeIndex,
                 value: newValue
             } : value
-        })))
+        })
+
+        dispatch(setGenotype(newGenotype))
+        dispatch(buildStructureRequest(structureCode))
     }
 
     return (

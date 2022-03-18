@@ -4,13 +4,13 @@ import { TreeAction } from "../actions/treeActions"
 
 type TreeState = {
     awaiting: boolean,
-    tree: Array<TreeNode>,
+    tree: Array<TreeNode> | null,
     error: string
 }
 
 const initialTreeState: TreeState = {
     awaiting: false,
-    tree: [],
+    tree: null,
     error: ''
 }  
 

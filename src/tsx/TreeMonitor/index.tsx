@@ -105,6 +105,10 @@ const TreeMonitor = () => {
 
     const getOptionsAmount = () => {
         let nodeSize: number[] = []
+        if (treeState.tree === null)
+        {
+            return 0
+        }
         for (let i = treeState.tree.length - 1; i >= 0; i--)
         {
             if (treeState.tree[i].children.length === 0) {

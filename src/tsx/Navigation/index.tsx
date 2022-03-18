@@ -10,7 +10,8 @@ const Navigation = () => {
         "M1 Tree observer",
         "M1 out",
         "M2 editor",
-        "M2 Structure observer"
+        "M2 Structure observer",
+        "Synthesis"
     ]
 
     const dispatch = useDispatch()

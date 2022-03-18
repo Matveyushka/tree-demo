@@ -98,7 +98,9 @@ const divideContent = (content: string[]): Identificator | null => {
     return id
 }
 
-export const getIdFromTree = (tree: TreeNode[], genotype: Gene[]) => divideContent(extractContent(tree, genotype))
+export const getIdFromTree = (tree: TreeNode[] | null, genotype: Gene[]) => tree !== null 
+    ? divideContent(extractContent(tree, genotype))
+    : null
 
 const StructureIdMonitor = () => {
     const { tree, genotype } = useSelector((state: State) => ({ tree: state.tree.tree, genotype: state.genotype.choosenGenotype }))

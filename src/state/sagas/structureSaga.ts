@@ -9,7 +9,12 @@ import { StructureActionTypes } from "../action-types/structureActionTypes"
 import { BuildStructureRequestAction } from "../actions/structureActions"
 import store from "../store"
 
-const getObjectIdentifier = (identifier: Identificator) => {
+const getObjectIdentifier = (identifier: Identificator | null) => {
+    if (identifier === null)
+    {
+        return null
+    }
+
     const submodules: any = {}
     Array.from(identifier.submodules).forEach(([key, value]) => submodules[key] = value.map(v => getObjectIdentifier(v)))
 
@@ -25,7 +30,7 @@ const getObjectIdentifier = (identifier: Identificator) => {
 const buildStructure = (code: string) => {
     const state = store.getState()
     const identifier = getIdFromTree(state.tree.tree, state.genotype.choosenGenotype)
-    const abc = (identifier !== null) ? getObjectIdentifier(identifier) : null
+    const abc = getObjectIdentifier(identifier)
     return axios.post('https://localhost:5001/buildstructura', {
         code,
         identifier: abc

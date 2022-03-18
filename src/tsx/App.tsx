@@ -11,6 +11,7 @@ import M1Editor from './M1Editor'
 import M2Editor from './M2Editor'
 import M2CompilatorControlPanel from './M2CompilatorControlPanel'
 import StructureMonitor from './StructureMonitor'
+import SynthesisPanel from './SynthesisPanel'
 
 function App() {
   const navigation = useSelector((state: State) => state.navigation)
@@ -47,6 +48,10 @@ function App() {
           <div className='structure-monitor-wrapper'>
             <StructureMonitor />
           </div>
+        )
+      case 5:
+        return (
+          <SynthesisPanel />
         )
     }
   }
