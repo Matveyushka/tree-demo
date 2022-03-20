@@ -7,8 +7,11 @@ import { buildStructureRequest } from '../../state/action-creators/structureActi
 import GeneController from './GeneController'
 
 const TreeControlPanel = () => {
-    const genotypeState = useSelector((state: State) => state.genotype)
-    const structureCode = useSelector((state: State) => state.code.m2code)
+    const { genotypeState, structureCode, m2compiled } = useSelector((state: State) => ({
+        genotypeState: state.genotype,
+        structureCode: state.code.m2code,
+        m2compiled: state.code.m2compiled
+    }))
     const dispatch = useDispatch()
 
     const updateGenotype = (updatedIndex: number, newValue: number) => {
@@ -20,7 +23,9 @@ const TreeControlPanel = () => {
         })
 
         dispatch(setGenotype(newGenotype))
-        dispatch(buildStructureRequest(structureCode))
+        if (m2compiled) {
+            dispatch(buildStructureRequest(structureCode))
+        }
     }
 
     return (

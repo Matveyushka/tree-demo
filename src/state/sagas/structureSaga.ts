@@ -3,6 +3,7 @@ import { all, call, put, takeLatest } from 'redux-saga/effects'
 import { Link } from "../../structure/link"
 import { Module } from "../../structure/module"
 import { getIdFromTree, Identificator } from "../../tsx/StructureIdMonitor"
+import { setM2Compiled } from "../action-creators/codeActionCreators"
 import { writeM2Error, writeM2Info } from "../action-creators/infoActionCreators"
 import { buildStructureFailure, buildStructureSuccess } from "../action-creators/structureActionCreators"
 import { StructureActionTypes } from "../action-types/structureActionTypes"
@@ -111,11 +112,11 @@ function* buildStructureSaga(action: BuildStructureRequestAction) {
         yield put(writeM2Info("M2 Compiling..."))
         const response: AxiosResponse<any> = yield call(buildStructure, action.payload)
         yield put(buildStructureSuccess(parseModule(response.data)))
+        yield put(setM2Compiled(true))
         yield put(writeM2Info("M2 Compiled successfully"))
     } catch (e: any) {
-        yield put(
-            buildStructureFailure("Fail")
-        )
+        yield put(buildStructureFailure("Fail"))
+        yield put(setM2Compiled(false))
         if (e.response !== undefined) {
             yield put(
                 writeM2Error(e.response.data)

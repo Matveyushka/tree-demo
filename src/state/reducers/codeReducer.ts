@@ -3,7 +3,9 @@ import { CodeAction } from "../actions/codeActions"
 
 type CodeState = {
     m1code: string,
+    m1compiled: boolean,
     m2code: string
+    m2compiled: boolean
 }
 
 const initialCodeState: CodeState = {
@@ -27,6 +29,7 @@ Module Main
     , 1 + 1 modules Complex
 
 Create Main`,
+    m1compiled: false,
     m2code: `Structura Basic 1-1-1-1
 
     Structura Complex 2
@@ -65,7 +68,8 @@ Create Main`,
                         Link    Basic[I](0s) - Complex[0](1)
                     On Last
                         Link    Basic[I - 2](0s) - Complex[1](0),
-                                Basic[I](0s) - Complex[1](1)`
+                                Basic[I](0s) - Complex[1](1)`,
+    m2compiled: false
 }
 
 const codeReducer = (
@@ -75,12 +79,24 @@ const codeReducer = (
         case CodeActionType.SET_M1_CODE:
             return {
                 ...state,
-                m1code: action.payload
+                m1code: action.payload,
+                m1compiled: false
             }
         case CodeActionType.SET_M2_CODE:
             return {
                 ...state,
-                m2code: action.payload
+                m2code: action.payload,
+                m2compiled: false
+            }
+        case CodeActionType.SET_M1_COMPILED:
+            return {
+                ...state,
+                m1compiled: action.payload
+            }
+        case CodeActionType.SET_M2_COMPILED:
+            return {
+                ...state,
+                m2compiled: action.payload
             }
         default:
             return state

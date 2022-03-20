@@ -1,6 +1,6 @@
-import React from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { State } from "../../state"
+import { writeM2Error } from "../../state/action-creators/infoActionCreators"
 import { buildStructureRequest } from "../../state/action-creators/structureActionCreators"
 import CompilatorControlPanel from "../CompilatorControlPanel"
 import { getIdFromTree, Identificator } from "../StructureIdMonitor"
@@ -12,34 +12,29 @@ type IdDto = {
 }
 
 const M2CompilatorControlPanel = () => {
+    const dispatch = useDispatch()
+
     const {
         code, 
-        tree, 
-        genotype,
+        m1compiled,
         info,
     } = useSelector((state: State) => ({
         code: state.code.m2code,
-        tree: state.tree.tree,
-        genotype: state.genotype.choosenGenotype,
+        m1compiled: state.code.m1compiled,
         info: state.info.m2Messages
     }))
 
-    const getId = (id: Identificator | null): IdDto | null => {
-        if (id !== null)
+    const m2compileAction = (code: string) => {
+        if (m1compiled)
         {
-            let featuresArray: { [key: string]: string; } = {}
-            Array.from(id.features).forEach(([key, value]) => featuresArray[key] = value)
-            return ({
-                name: id.name,
-                features: featuresArray,
-                submodules: id.submodules
-            })
+            return buildStructureRequest(code)
         }
+        dispatch(writeM2Error("Compile M1 first!"))
         return null
     }
 
     return (
-        <CompilatorControlPanel code={code} messages={info} compileAction={buildStructureRequest} />
+        <CompilatorControlPanel code={code} messages={info} compileAction={m2compileAction} />
     )
 }
 

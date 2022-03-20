@@ -10,10 +10,22 @@ interface SetM2CodeAction {
     payload: string
 }
 
-type CodeAction = SetM1CodeAction | SetM2CodeAction
+interface SetM1CompiledAction {
+    type: CodeActionType.SET_M1_COMPILED,
+    payload: boolean
+}
+
+interface SetM2CompiledAction {
+    type: CodeActionType.SET_M2_COMPILED,
+    payload: boolean
+}
+
+type CodeAction = SetM1CodeAction | SetM2CodeAction | SetM1CompiledAction | SetM2CompiledAction
 
 export type {
     CodeAction,
     SetM1CodeAction,
-    SetM2CodeAction
+    SetM2CodeAction,
+    SetM1CompiledAction,
+    SetM2CompiledAction
 }

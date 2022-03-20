@@ -97,8 +97,8 @@ const getWorkingWidth = (module: Module) => {
     let submoduleX = 0
     return flatSubmodules(module)
     .reduce((rightest, submodule, index, submodules) => {
-        submoduleX = module.x ?? (submoduleX + (index === 0 ? 0 : (getModuleSize(submodules[index - 1]).width + unit)))
-        return Math.max(rightest, (submoduleX ?? 0) + getModuleSize(submodule).width)
+        submoduleX = (submodule.x === null) ? (submoduleX + (index === 0 ? 0 : (getModuleSize(submodules[index - 1]).width + unit))) : 0
+        return Math.max(rightest, (submodule.x ?? 0) + submoduleX + getModuleSize(submodule).width)
     }, 0)
 }
 
@@ -277,15 +277,12 @@ const drawModule = (
     module.links.forEach(link => drawLink(context, beginX, beginY, link, module, size, scale, position, canvasWidth, canvasHeight))
     
     let submoduleX = 0
-    let submoduleY = 0 
     flatSubmodules(module).forEach((submodule, index, submodules) => {
-        submoduleX = module.x ?? (submoduleX + (index === 0 ? 0 : (getModuleSize(submodules[index - 1]).width + unit)))
-        submoduleY = module.y ?? 0
-
+        submoduleX = (submodule.x === null) ? (submoduleX + (index === 0 ? 0 : (getModuleSize(submodules[index - 1]).width + unit))) : 0
         drawModule(
             context,
-            submoduleX + offsetX,
-            submoduleY + offsetY,
+            (module.x ?? 0) + submoduleX + offsetX,
+            (module.y ?? 0) + offsetY,
             submodule,
             scale,
             position,

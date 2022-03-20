@@ -22,7 +22,11 @@ const CompilatorControlPanel = (params: CompilatoControlPanelParams) => {
         <div className='compilator-control-panel'>
             <div className='compilator-control-panel-buttons'>
                 <button className='compilator-control-panel-button' onClick={() => {
-                    dispatch(params.compileAction(params.code))
+                    const compileAction = params.compileAction(params.code)
+                    if (compileAction !== null)
+                    {
+                        dispatch(compileAction)
+                    }
                 }}>Compile</button>
             </div>
             <div ref={ref} className='compilator-control-panel-info'>
