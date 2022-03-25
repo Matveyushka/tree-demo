@@ -4,7 +4,7 @@ import { TreeAction } from "../actions/treeActions"
 
 type TreeState = {
     awaiting: boolean,
-    tree: Array<TreeNode> | null,
+    tree: TreeNode[] | null,
     error: string
 }
 

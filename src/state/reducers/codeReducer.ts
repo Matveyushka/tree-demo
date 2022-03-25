@@ -9,66 +9,56 @@ type CodeState = {
 }
 
 const initialCodeState: CodeState = {
-    m1code: `Module Basic
-    Feature Dummy value
-
-Module Complex
-    Feature Size one two
+    m1code: `Module Pole2H
     
-    Case Size one
-    Generate 1 modules Basic Simple
+    Module Pole2V
+        Feature Dummy value
+        
+        Generate 1 modules Pole2H
+        
+    Module PoleLC
+        Feature Type simple
+        Feature Size 1 2 3 4 5
+        
+        Generate Size + 1 modules Pole2H,
+                 Size modules Pole2V
     
-    Case Size two
-    Generate 2 modules Basic Simple
-
-Module Main
-    Feature Type rectangle
-    
-    Case Type rectangle
-    Generate 10 modules Basic
-    , 1 + 1 modules Complex
-
-Create Main`,
+    Create PoleLC`,
     m1compiled: false,
-    m2code: `Structura Basic 1-1-1-1
+    m2code: `Structura Pole2H 1-0-1-0
 
-    Structura Complex 2
-        Position Basic
-            On First Place 0, 0
-            On Last Place 30, 0
-        Feature Size
-            Case one
-                List Basic
+    Structura Pole2V 0-1-0-1
+        Feature Dummy
+            Case value
+                List Pole2H
                     On First
-                        Link    Port 0 - Basic[0](0w),
-                                Port 1 - Basic[0](0e)
+                        Link
+                            Port 0n - Pole2H[I](0w),
+                            Port 0s - Pole2H[I](0e)
     
-    Structura Main 2
-        Position Basic
-            On \\2 Place 20*I, 0
-            On not \\2 Place 20*(I-1), 20
-        Position Complex
-            On First Place 10, 40
-            On Last Place 130, 40
+    Structura PoleLC 1-0-1-1
+        Position Pole2H
+            On Any Place I * 60, 0
+        Position Pole2V
+            On Any Place I * 60 + 20, 40
         Feature Type
-            Case rectangle
-                List Basic
+            Case simple
+                List Pole2H
                     On First
-                        Link    Port 1 - Basic[I](0w)
+                        Link 
+                            Port 0w - Pole2H[I](0w),
+                            Pole2H[I](0e) - Pole2V[I](0n)
                     On Last
-                        Link    Port 0 - Basic[I-1](0e),
-                                Basic[I](0n) - Basic[I-1](0s)
-                    On not \\2, not Last
-                        Link    Basic[I](0n) - Basic[I-1](0s),
-                                Basic[I](0e) - Basic[I+2](0w),
-                                Basic[I-1](0e) - Basic[I+1](0w)
-                    On 1
-                        Link    Basic[I](0s) - Complex[0](0)
-                    On 3
-                        Link    Basic[I](0s) - Complex[0](1)
-                    On Last
-                        Link    Basic[I - 2](0s) - Complex[1](0),
-                                Basic[I](0s) - Complex[1](1)`,
+                        Link
+                            Pole2V[I - 1](0n) - Pole2H[I](0w),
+                            Pole2H[I](0e) - Port 0e
+                    On not First, not Last
+                        Link
+                            Pole2H[I](0w) - Pole2V[I-1](0n),
+                            Pole2H[I](0e) - Pole2V[I](0n)
+                List Pole2V
+                    On Any
+                        Link Pole2V[I](0s) - Port 0s`,
     m2compiled: false
 }
 

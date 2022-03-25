@@ -21,7 +21,8 @@ const extractContent = (tree: TreeNode[], genotype: Gene[]) => {
     }
     tree.forEach((node, index) => {
         if (included.includes(index)) {
-            if (node.type === TreeNodeType.AND) {
+            content.push(node.moduleList + "!")
+            if (node.type === TreeNodeType.AND && (node.children.length ?? 0) > 0) {
                 node.children.forEach(i => included.push(i))
             }
             else if ((node.children.length ?? 0) > 0 && genotype.length > 0) {
@@ -37,49 +38,44 @@ const extractContent = (tree: TreeNode[], genotype: Gene[]) => {
 }
 
 const handleContent = (content: string[], id: Identificator) => {
-    if (content.length === 4) {
+    if (content.length === 3) {
         id.name = content[0]
+        return
+    } else if (content.length === 4) {
         id.features.set(content[2], content[3])
-    }
-    else {
-        const subId = id.submodules.get(content[2])
-        if (subId !== undefined) {
-            if (subId[parseInt(content[3])] === undefined) {
-                subId[parseInt(content[3])] = {
-                    name: content[2],
+    } else if (content.length % 2 === 1) {
+        const submoduleName = content[content.length - 3]
+        const submoduleIndex = parseInt(content[content.length - 2])
+        const subId = id.submodules.get(submoduleName)
+        if (subId === undefined) {
+            id.submodules.set(submoduleName, [{
+                name: submoduleName,
+                features: new Map(),
+                submodules: new Map()
+            }])
+        }
+        else {
+            if (subId[submoduleIndex] === undefined) {
+                subId[submoduleIndex] = {
+                    name: submoduleName,
                     features: new Map(),
                     submodules: new Map()
                 }
             }
-            handleContent(content.slice(2), subId[parseInt(content[3])])
         }
-        else {
-            id.submodules.set(content[2], [{
-                name: content[2],
-                features: new Map(),
-                submodules: new Map()
-            }])
-            const uuu = id.submodules.get(content[2])
-            if (uuu !== undefined) {
-                if (uuu[parseInt(content[3])] === undefined) {
-                    uuu[parseInt(content[3])] = {
-                        name: content[2],
-                        features: new Map(),
-                        submodules: new Map()
-                    }
-                }
-                handleContent(content.slice(2), uuu[parseInt(content[3])])
-            }
-        }
+    }
+    const subId = id.submodules.get(content[2])
+    if (subId !== undefined) {
+        handleContent(content.slice(2), subId[parseInt(content[3])])
     }
 }
 
 const divideContent = (content: string[]): Identificator | null => {
-    const divided = content.map(str => str.split(/[[\];:. ]+/))
-    
-    for (let i = 0; i !== divided.length; i++) {
-        divided[i].pop()
-    }
+    const divided = content
+        .map(str => str
+            .split(/[[\];:. ]+/)
+            .filter(token => token.length > 0))
+        .filter(dividedContent => dividedContent.length > 1)
 
     if (divided.length === 0) {
         return null
@@ -98,18 +94,18 @@ const divideContent = (content: string[]): Identificator | null => {
     return id
 }
 
-export const getIdFromTree = (tree: TreeNode[] | null, genotype: Gene[]) => tree !== null 
+export const getIdFromTree = (tree: TreeNode[] | null, genotype: Gene[]) => tree !== null
     ? divideContent(extractContent(tree, genotype))
     : null
 
 const StructureIdMonitor = () => {
     const { tree, genotype } = useSelector((state: State) => ({ tree: state.tree.tree, genotype: state.genotype.choosenGenotype }))
-    
+
     const id: Identificator | null = getIdFromTree(tree, genotype)
 
     return (
         <div className="structure-id-monitor">
-            {id !== null ? <IdTree id={id} index={0}/> : ''}
+            {id !== null ? <IdTree id={id} index={0} /> : ''}
         </div>
     )
 }

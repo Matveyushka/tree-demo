@@ -71,7 +71,9 @@ const TreeMonitor = () => {
                 if (Math.sqrt(Math.pow((mouseX - x), 2) + Math.pow((mouseY - y), 2)) < nodeEntity.radius * scale) {
                     if (nodeEntity.node.content !== undefined)
                     {
-                        setInfo(index + ";" + nodeEntity.node.content)
+                        setInfo(index + ";" + 
+                            "module: " + nodeEntity.node.moduleList + ";" + 
+                            (nodeEntity.node.content ?? ""))
                     }
                     infoSet = true
                 }

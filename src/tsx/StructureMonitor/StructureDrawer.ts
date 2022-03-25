@@ -34,8 +34,6 @@ const getLinkPortPosition = (
         const submodules = module.submodules.get(port.submoduleName)
         const submodule = (submodules !== undefined) ? submodules[port.submoduleIndex] : null
 
-        console.log(module.name)
-        console.log(port.portIndex)
         if (isSimplePortIndex(port.portIndex)
             && submodule
             && isCircle(submodule)) {
@@ -183,7 +181,7 @@ const drawLink = (
     const x2 = (beginX + (toPosition.x ?? 0) + cnvsposition.x) * scale + canvasWidth / 2
     const y2 = (beginY + (toPosition.y ?? 0) + cnvsposition.y) * scale + canvasHeight / 2
 
-    context.strokeStyle = 'red'
+    context.strokeStyle = 'darkblue'
     context.lineWidth = 2
     context.beginPath()
 

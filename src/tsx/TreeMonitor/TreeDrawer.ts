@@ -113,37 +113,62 @@ const drawTree = (
         const x = (nodeEntity.x + position.x) * scale + canvasWidth / 2
         const y = (nodeEntity.y + position.y) * scale + canvasHeight / 2
 
-        nodeEntity.node.children.forEach(child => {
-            if (!nodeEntities[child].choosen) {
-                const childX = (nodeEntities[child].x + position.x) * scale + canvasWidth / 2
-                const childY = (nodeEntities[child].y + position.y) * scale + canvasHeight / 2
+        let anyChildChoosen = false
+        let leftChoosenBorderX = x
+        let rightChoosenBorderX = x
 
+        nodeEntity.node.children.forEach(child => {
+            const childX = (nodeEntities[child].x + position.x) * scale + canvasWidth / 2
+            const childY = (nodeEntities[child].y + position.y) * scale + canvasHeight / 2
+            context.beginPath()
+            if (nodeEntities[child].choosen === false) {
                 context.strokeStyle = 'black'
                 context.lineWidth = 1
-                context.beginPath()
-                context.moveTo(x, y)
-                context.lineTo(x, (childY + y) / 2)
-                context.lineTo(childX, (childY + y) / 2)
+                context.moveTo(childX, (childY + y) / 2)
                 context.lineTo(childX, childY)
-                context.stroke()
+            } else {
+                anyChildChoosen = true
+                if (childX < leftChoosenBorderX) {
+                    leftChoosenBorderX = childX
+                }
+                if (childX > rightChoosenBorderX) {
+                    rightChoosenBorderX = childX
+                }
+                context.strokeStyle = 'red'
+                context.lineWidth = 2
+                context.moveTo(childX, (childY + y) / 2)
+                context.lineTo(childX, childY)
             }
+            context.stroke()
         })
 
-        nodeEntity.node.children.forEach(child => {
-            if (nodeEntities[child].choosen) {
-                const childX = (nodeEntities[child].x + position.x) * scale + canvasWidth / 2
-                const childY = (nodeEntities[child].y + position.y) * scale + canvasHeight / 2
-
+        if (nodeEntity.node.children.length > 0)
+        {
+            const leftX = (position.x + nodeEntities[nodeEntity.node.children[0]].x) * scale + canvasWidth / 2
+            const rightX = (position.x + nodeEntities[nodeEntity.node.children[nodeEntity.node.children.length - 1]].x) * scale + canvasWidth / 2
+            const childY = (nodeEntities[nodeEntity.node.children[0]].y + position.y) * scale + canvasHeight / 2
+            context.strokeStyle = 'black'
+            context.lineWidth = 1
+            context.beginPath()
+            context.moveTo(leftX, (childY + y) / 2)
+            context.lineTo(leftChoosenBorderX, (childY + y) / 2)
+            context.moveTo(rightChoosenBorderX, (childY + y) / 2)
+            context.lineTo(rightX, (childY + y) / 2)
+            context.stroke()
+            context.beginPath()
+            if (anyChildChoosen) {
                 context.strokeStyle = 'red'
                 context.lineWidth = 2
                 context.beginPath()
-                context.moveTo(x, y)
-                context.lineTo(x, (childY + y) / 2)
-                context.lineTo(childX, (childY + y) / 2)
-                context.lineTo(childX, childY)
+                context.moveTo(leftChoosenBorderX, (childY + y) / 2)
+                context.lineTo(rightChoosenBorderX, (childY + y) / 2)
                 context.stroke()
             }
-        })
+            context.moveTo(x, y)
+            context.lineTo(x, (childY + y) / 2)
+            context.stroke()
+        }
+
 
         context.fillStyle = nodeEntity.node.type === TreeNodeType.AND ?
             (choosen ? 'red' : 'black') :

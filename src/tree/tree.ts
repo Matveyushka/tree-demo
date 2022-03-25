@@ -7,8 +7,9 @@ enum TreeNodeType {
 
 type TreeNode = {
     type: TreeNodeType,
-    children: Array<number>,
-    content: string
+    children: number[],
+    content: string,
+    moduleList: string
 }
 
 const GetGenotypeStruct = (tree: TreeNode[] ): Gene[] => {
