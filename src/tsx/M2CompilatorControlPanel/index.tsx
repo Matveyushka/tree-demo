@@ -3,13 +3,6 @@ import { State } from "../../state"
 import { writeM2Error } from "../../state/action-creators/infoActionCreators"
 import { buildStructureRequest } from "../../state/action-creators/structureActionCreators"
 import CompilatorControlPanel from "../CompilatorControlPanel"
-import { getIdFromTree, Identificator } from "../StructureIdMonitor"
-
-type IdDto = {
-    name: string,
-    features: { [key: string]: string; },
-    submodules: Map<string, Identificator[]>
-}
 
 const M2CompilatorControlPanel = () => {
     const dispatch = useDispatch()

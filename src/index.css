@@ -20,3 +20,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Works on Firefox */
+.flat-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color5) var(--color3);
+}
+
+/* Works on Chrome, Edge, and Safari */
+.flat-scrollbar::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.flat-scrollbar::-webkit-scrollbar-track {
+  background: var(--color3);
+}
+
+.flat-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--color5);
+}
+
+.flat-scrollbar::-webkit-scrollbar-corner {
+  background: var(--color3);
+}

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios"
 import { all, call, put, takeLatest } from 'redux-saga/effects'
 import { Link } from "../../structure/link"
 import { Module } from "../../structure/module"
-import { getIdFromTree, Identificator } from "../../tsx/StructureIdMonitor"
+import { getIdFromTree, Identificator, parseModuleIdentifierToSend } from "../../tsx/StructureIdMonitor"
 import { setM2Compiled } from "../action-creators/codeActionCreators"
 import { writeM2Error, writeM2Info } from "../action-creators/infoActionCreators"
 import { buildStructureFailure, buildStructureSuccess } from "../action-creators/structureActionCreators"
@@ -10,31 +10,12 @@ import { StructureActionTypes } from "../action-types/structureActionTypes"
 import { BuildStructureRequestAction } from "../actions/structureActions"
 import store from "../store"
 
-const getObjectIdentifier = (identifier: Identificator | null) => {
-    if (identifier === null)
-    {
-        return null
-    }
-
-    const submodules: any = {}
-    Array.from(identifier.submodules).forEach(([key, value]) => submodules[key] = value.map(v => getObjectIdentifier(v)))
-
-    let dict: any = new Object()
-    dict['name'] = identifier.name
-    dict['features'] = new Object()
-    Array.from(identifier.features).forEach(([key, value], index) => dict['features'][key] = value)
-    dict['submodules'] = submodules
-
-    return dict
-}
-
 const buildStructure = (code: string) => {
     const state = store.getState()
-    const identifier = getIdFromTree(state.tree.tree, state.genotype.choosenGenotype)
-    const abc = getObjectIdentifier(identifier)
+    const identifier = parseModuleIdentifierToSend(getIdFromTree(state.tree.tree, state.genotype.choosenGenotype))
     return axios.post('https://localhost:5001/buildstructura', {
         code,
-        identifier: abc
+        identifier: identifier
     })
 }
 

@@ -29,7 +29,7 @@ const CompilatorControlPanel = (params: CompilatoControlPanelParams) => {
                     }
                 }}>Compile</button>
             </div>
-            <div ref={ref} className='compilator-control-panel-info'>
+            <div ref={ref} className='compilator-control-panel-info flat-scrollbar'>
                 {
                     params.messages.map((message, index) => (<div key={index} style={{ color: message.color }}>
                         {message.value}

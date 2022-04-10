@@ -29,7 +29,7 @@ const TreeControlPanel = () => {
     }
 
     return (
-        <div className='tree-control-panel'>
+        <div className='tree-control-panel flat-scrollbar'>
             {
                 genotypeState.genotypeStruct.map((geneStruct, index) =>
                     <GeneController

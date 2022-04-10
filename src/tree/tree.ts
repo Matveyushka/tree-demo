@@ -5,11 +5,26 @@ enum TreeNodeType {
     AND
 }
 
+type ModuleInstanceName = {
+    name: string,
+    index: number
+}
+
+type Feature = {
+    name: string,
+    values: string[]
+}
+
+type TreeNodeValue = {
+    moduleList: ModuleInstanceName[],
+    value: Feature
+}
+
 type TreeNode = {
     type: TreeNodeType,
     children: number[],
-    content: string,
-    moduleList: string
+    content: TreeNodeValue[],
+    savedValues: object
 }
 
 const GetGenotypeStruct = (tree: TreeNode[] ): Gene[] => {
@@ -36,5 +51,5 @@ const GetGeneFromNode = (index: number, node: TreeNode): Gene => ({
     value: node.children.length
 })
 
-export type { TreeNode }
+export type { ModuleInstanceName, Feature, TreeNodeValue, TreeNode }
 export { TreeNodeType, GetGenotypeStruct }

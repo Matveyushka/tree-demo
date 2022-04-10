@@ -71,9 +71,32 @@ const TreeMonitor = () => {
                 if (Math.sqrt(Math.pow((mouseX - x), 2) + Math.pow((mouseY - y), 2)) < nodeEntity.radius * scale) {
                     if (nodeEntity.node.content !== undefined)
                     {
-                        setInfo(index + ";" + 
-                            "module: " + nodeEntity.node.moduleList + ";" + 
-                            (nodeEntity.node.content ?? ""))
+                        let info = index + ";"
+
+                        nodeEntity.node.content.forEach(value => {
+                            value.moduleList.forEach(mdl => {
+                                info += `${mdl.name}[${mdl.index}] `
+                            })
+                            if (value.value !== null)
+                            {
+                                info += value.value.name + " "
+                                value.value.values.forEach(vl => {
+                                    info += vl + " "
+                                })
+                            }
+                            else
+                            {
+                                info += "NO FEATURE"
+                            }
+                            info += ";"
+                        })
+
+                        info += "saved values: ;"
+                        for (const [key, value] of Object.entries(nodeEntity.node.savedValues)) {
+                            info += `${key}: ${value};`
+                        }
+                        
+                        setInfo(info)
                     }
                     infoSet = true
                 }
